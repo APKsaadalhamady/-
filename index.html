@@ -19,8 +19,8 @@
 
     <style>
         body { font-family: 'Tajawal', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .glass { background: rgba(255, 255, 255, 0.90); backdrop-filter: blur(12px); }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     </style>
@@ -31,8 +31,8 @@
     <header class="sticky top-0 z-40 glass border-b border-slate-200/80 shadow-sm">
         <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-teal-600 flex items-center justify-center text-white shadow-md shadow-teal-600/30">
-                    <i data-lucide="activity" class="w-6 h-6"></i>
+                <div class="w-10 h-10 rounded-2xl bg-teal-600 flex items-center justify-center text-white shadow-md shadow-teal-600/30">
+                    <i data-lucide="stethoscope" class="w-6 h-6"></i>
                 </div>
                 <div>
                     <h1 class="text-lg font-bold text-slate-900 leading-tight">دليل البصرة الطبي</h1>
@@ -77,7 +77,7 @@
             </div>
 
             <!-- Categories Horizontal Scroll -->
-            <div class="flex items-center gap-2 overflow-x-auto pb-1 pt-1 custom-scrollbar text-xs font-medium" id="categoryPills">
+            <div class="flex items-center gap-2 overflow-x-auto pb-2 pt-1 custom-scrollbar text-xs font-medium" id="categoryPills">
                 <button onclick="setCategory('all')" class="cat-pill active px-3.5 py-2 rounded-xl bg-teal-600 text-white font-semibold shadow-sm transition whitespace-nowrap">الكل</button>
                 <button onclick="setCategory('باطنية')" class="cat-pill px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition whitespace-nowrap">باطنية وقلبية</button>
                 <button onclick="setCategory('نسائية')" class="cat-pill px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition whitespace-nowrap">نسائية وتوليد</button>
@@ -87,14 +87,15 @@
                 <button onclick="setCategory('كسور')" class="cat-pill px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition whitespace-nowrap">كسور ومفاصل</button>
                 <button onclick="setCategory('أسنان')" class="cat-pill px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition whitespace-nowrap">طب الأسنان</button>
                 <button onclick="setCategory('عيون')" class="cat-pill px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition whitespace-nowrap">عيون</button>
-                <button onclick="setCategory('مستشفيات ومجمعات')" class="cat-pill px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition whitespace-nowrap">مستشفيات ومجمعات</button>
-                <button onclick="setCategory('مختبرات وصيدليات')" class="cat-pill px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition whitespace-nowrap">مختبرات وصيدليات</button>
+                <button onclick="setCategory('مستشفيات')" class="cat-pill px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition whitespace-nowrap">مستشفيات ومجمعات</button>
+                <button onclick="setCategory('مختبرات')" class="cat-pill px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition whitespace-nowrap">مختبرات</button>
+                <button onclick="setCategory('صيدليات')" class="cat-pill px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition whitespace-nowrap">صيدليات</button>
             </div>
         </section>
 
         <!-- Search Results Count -->
         <div class="flex items-center justify-between text-xs text-slate-500 mb-4 px-1">
-            <span>النتائج المعروضة: <strong id="resultCount" class="text-teal-700 font-bold">0</strong></span>
+            <span>عدد النتائج: <strong id="resultCount" class="text-teal-700 font-bold">0</strong></span>
             <span id="activeFilterLabel" class="text-slate-400">جميع الأقسام</span>
         </div>
 
@@ -109,7 +110,7 @@
                 <i data-lucide="file-question" class="w-8 h-8"></i>
             </div>
             <h3 class="text-base font-bold text-slate-700 mb-1">لا توجد نتائج مطابقة</h3>
-            <p class="text-xs text-slate-500">جرب البحث بكلمات أخرى أو اختر قسماً مختلفاً.</p>
+            <p class="text-xs text-slate-500">جرب البحث بكلمات أخرى أو تغيير القسم المحدد.</p>
         </div>
     </main>
 
@@ -119,35 +120,33 @@
             <div class="flex items-center justify-between border-b pb-3">
                 <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
                     <i data-lucide="smartphone" class="w-5 h-5 text-teal-600"></i>
-                    طريقة تثبيت التطبيق على جهازك
+                    تثبيت التطبيق على جهازك
                 </h3>
                 <button onclick="toggleModal('installModal')" class="text-slate-400 hover:text-slate-600 p-1">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
             
-            <!-- Android Guide -->
             <div class="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-100">
                 <h4 class="text-xs font-bold text-emerald-900 mb-1 flex items-center gap-1.5">
-                    <i data-lucide="android" class="w-4 h-4 text-emerald-700"></i> أجهزة أندرويد (Chrome):
+                    <i data-lucide="smartphone" class="w-4 h-4 text-emerald-700"></i> أجهزة أندرويد (Chrome):
                 </h4>
                 <p class="text-xs text-emerald-800 leading-relaxed">
-                    اضغط على زر الخيارات (⋮) أعلى المتصفح، ثم اختر <strong>"تثبيت التطبيق"</strong> أو <strong>"الإضافة إلى الشاشة الرئيسية"</strong>.
+                    اضغط على قائمة الخيارات (⋮) أعلى المتصفح، ثم اختر <strong>"تثبيت التطبيق"</strong> أو <strong>"الإضافة إلى الشاشة الرئيسية"</strong>.
                 </p>
             </div>
 
-            <!-- iOS Guide -->
             <div class="p-3.5 rounded-2xl bg-sky-50 border border-sky-100">
                 <h4 class="text-xs font-bold text-sky-900 mb-1 flex items-center gap-1.5">
-                    <i data-lucide="apple" class="w-4 h-4 text-sky-700"></i> أجهزة آيفون (Safari):
+                    <i data-lucide="share" class="w-4 h-4 text-sky-700"></i> أجهزة آيفون (Safari):
                 </h4>
                 <p class="text-xs text-sky-800 leading-relaxed">
-                    اضغط على زر المشاركة (<i data-lucide="share" class="w-3 h-3 inline"></i>) أسفل المتصفح، ثم مرر واختر <strong>"إضافة إلى الصفحة الرئيسية"</strong>.
+                    اضغط على زر المشاركة (Share) أسفل الشاشة، ثم اختر <strong>"إضافة إلى الصفحة الرئيسية" (Add to Home Screen)</strong>.
                 </p>
             </div>
 
             <button onclick="toggleModal('installModal')" class="w-full py-2.5 bg-slate-900 text-white rounded-xl text-xs font-semibold hover:bg-slate-800 transition">
-                فهمت ذلك
+                إغلاق
             </button>
         </div>
     </div>
@@ -158,7 +157,7 @@
             <div class="flex items-center justify-between border-b pb-3">
                 <div>
                     <h3 class="text-base font-bold text-slate-900">إرسال ملاحظة أو اقتراح تعديل</h3>
-                    <p class="text-xs text-slate-500">تصل هذه المعلومات لإدارة التطبيق حصراً لمراجعتها وتحديث الدليل.</p>
+                    <p class="text-xs text-slate-500">تصل هذه الملاحظات للإدارة حصراً لمراجعتها وتحديث الدليل.</p>
                 </div>
                 <button onclick="toggleModal('feedbackModal')" class="text-slate-400 hover:text-slate-600 p-1">
                     <i data-lucide="x" class="w-5 h-5"></i>
@@ -176,14 +175,14 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">العنوان الجديد أو رقم الهاتف المحدث</label>
-                    <textarea id="fbDetails" rows="3" required placeholder="اكتب العنوان الجديد بالتفصيل، أرقام الهواتف الجديدة، أو أوقات الدوام..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"></textarea>
+                    <textarea id="fbDetails" rows="3" required placeholder="اكتب العنوان بالتفصيل، أرقام الهواتف، أو التعديل المطلوب..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"></textarea>
                 </div>
 
                 <div class="flex gap-2 pt-2">
                     <button type="submit" class="flex-1 py-2.5 bg-teal-600 text-white rounded-xl text-xs font-semibold hover:bg-teal-700 transition flex items-center justify-center gap-1.5">
                         <i data-lucide="send" class="w-4 h-4"></i> إرسال الملاحظة
                     </button>
-                    <a href="https://wa.me/9647800000000" target="_blank" class="px-4 py-2.5 bg-emerald-500 text-white rounded-xl text-xs font-semibold hover:bg-emerald-600 transition flex items-center gap-1.5" title="مراسلة واتساب الإدارة المباشرة">
+                    <a href="https://wa.me/9647806244532" target="_blank" class="px-4 py-2.5 bg-emerald-500 text-white rounded-xl text-xs font-semibold hover:bg-emerald-600 transition flex items-center gap-1.5" title="مراسلة الإدارة واتساب[span_0](start_span)"[span_0](end_span)>
                         <i data-lucide="phone" class="w-4 h-4"></i> واتساب الإدارة
                     </a>
                 </div>
@@ -217,7 +216,7 @@
                         <div class="p-2 bg-teal-50 text-teal-700 rounded-lg">
                             <i data-lucide="sliders" class="w-5 h-5"></i>
                         </div>
-                        <h3 class="text-base font-bold text-slate-900">لوحة الإدارة & Data Extractor المدمج</h3>
+                        <h3 class="text-base font-bold text-slate-900">لوحة الإدارة & محرك استخراج البيانات المدمج</h3>
                     </div>
                     <button onclick="toggleModal('adminModal')" class="text-slate-400 hover:text-slate-600 p-1">
                         <i data-lucide="x" class="w-5 h-5"></i>
@@ -229,22 +228,22 @@
                     <h4 class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
                         <i data-lucide="file-up" class="w-4 h-4 text-teal-600"></i> استخراج وتحديث البيانات من ملف (Excel أو PDF):
                     </h4>
-                    <p class="text-xs text-slate-600">اختر ملف Excel (.xlsx, .xls) أو ملف PDF لاستخراج جداول الأطباء واستبدال قاعدة البيانات الحالية فوراً.</p>
+                    <p class="text-xs text-slate-600">ارفع ملف Excel أو PDF ليقوم المحرك الذكي بقراءة كافة الصفحات واستخراج بيانات الأطباء والمجمعات فوراً.</p>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">تاريخ التحديث الجديد للملف:</label>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">تاريخ التحديث الجديد للبيانات:</label>
                             <input type="text" id="newUpdateDate" value="2026/08/21" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 mb-1">رفع الملف:</label>
-                            <input type="file" id="dataFileUpload" accept=".xlsx, .xls, .pdf" class="w-full text-xs text-slate-600 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-100 file:text-teal-800 hover:file:bg-teal-200 cursor-pointer">
+                            <input type="file" id="dataFileUpload" accept=".xlsx, .xls, .csv, .pdf" class="w-full text-xs text-slate-600 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-100 file:text-teal-800 hover:file:bg-teal-200 cursor-pointer">
                         </div>
                     </div>
 
-                    <div class="flex gap-2 pt-2">
+                    <div class="flex flex-wrap gap-2 pt-2">
                         <button onclick="processUploadedFile()" class="px-4 py-2 bg-teal-600 text-white rounded-xl text-xs font-semibold hover:bg-teal-700 transition flex items-center gap-1.5">
-                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> بدء الاستخراج والتحديث
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> بدء الاستخراج والتحديث الفوري
                         </button>
                         <button onclick="exportCurrentJSON()" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-xl text-xs font-semibold hover:bg-slate-300 transition flex items-center gap-1.5">
                             <i data-lucide="download" class="w-3.5 h-3.5"></i> تصدير Data JSON للـ GitHub
@@ -256,7 +255,7 @@
                 <div class="space-y-3">
                     <div class="flex items-center justify-between">
                         <h4 class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                            <i data-lucide="inbox" class="w-4 h-4 text-teal-600"></i> الملاحظات والتعديلات المستقبلة من المستخدمين:
+                            <i data-lucide="inbox" class="w-4 h-4 text-teal-600"></i> الملاحظات والتعديلات المستقبلة:
                         </h4>
                         <button onclick="clearFeedbackInbox()" class="text-rose-600 hover:text-rose-700 text-xs font-semibold">مسح الكل</button>
                     </div>
@@ -270,26 +269,31 @@
 
     <!-- Script Logic -->
     <script>
-        // Sample Core Initial Data extracted from PDF
+        // Sample Core Initial Dataset Extracted from PDF
         const DEFAULT_DATA = [
-            { id: 1, name: "د. زينب عبد الرضا العواد", specialty: "باطنية وصدرية وقلبية", location: "بريهة - قرب مستشفى النور الأهلي - مجمع المصطفى الطبي", phones: ["07715554803"], notes: "الأحد والاثنين والثلاثاء والأربعاء عصراً", category: "باطنية" },
-            { id: 2, name: "د. محمد شاهي", specialty: "باطنية وصدرية وقلبية", location: "العباسية - خلف نادي الأطباء - قرب مجمع ميديكا الطبي", phones: ["07722404015"], notes: "يوم في مستشفى البصرة الجمهوري", category: "باطنية" },
-            { id: 3, name: "د. فالح عبد الصاحب الصافي", specialty: "باطنية وصدرية وقلبية", location: "بريهة - قرب حسينية أولاد عامر - مجمع النخبة الطبي", phones: ["07714423733"], notes: "يداوم في مستشفى الصدر التعليمي", category: "باطنية" },
-            { id: 4, name: "د. حيدر عبد عون علاوي", specialty: "باطنية وغدد صماء وسكري", location: "الزبير - الرشيدية - مجمع الأنوار الطبي", phones: ["07758580147"], notes: "يداوم في مركز الفيحاء للسكري", category: "باطنية" },
-            { id: 5, name: "د. عبد الكريم زين الدين الموسوي", specialty: "نسائية وتوليد وعقم", location: "الجزائر - عيادات مستشفى الموسوي الأهلي", phones: ["07714587811", "07733345595"], notes: "الجمعة عطلة العيادة", category: "نسائية" },
-            { id: 6, name: "د. لمياء جعفر البغدادي", specialty: "نسائية وتوليد", location: "شارع السعدي - عيادات السعدي التخصصية", phones: ["07729544395"], notes: "السبت عصراً في مستشفى الفراهيدي", category: "نسائية" },
-            { id: 7, name: "د. علي عايد العالي", specialty: "جراحة الجهاز الهضمي والناظور", location: "بريهة - قرب جسر المحاكم - المجمع العالمي", phones: ["07700496658"], notes: "يداوم يوم الأحد في مستشفى الموانئ", category: "جراحة" },
-            { id: 8, name: "د. كاظم الربيعي", specialty: "جلدية وتناسلية وتجميل", location: "شارع السعدي - عيادات السعدي التخصصية", phones: ["07715950905"], notes: "الدوام صباحاً ومساءً", category: "جلدية" },
-            { id: 9, name: "د. ميثم العاشور", specialty: "جراحة الجملة العصبية", location: "شارع السعدي - عيادات السعدي التخصصية", phones: ["07714969600"], notes: "يداوم في مستشفى الصدر التعليمي", category: "جراحة" },
-            { id: 10, name: "مستشفى المواساة الأهلي", specialty: "مستشفى أهلي متكامل وطوارئ", location: "المشراق الجديد", phones: ["07712490649", "07888000612"], notes: "استقبال واستشاريات على مدار الساعة", category: "مستشفيات ومجمعات" },
-            { id: 11, name: "مجمع سبع سنابل الطبي الخيري (فرع العباسية)", specialty: "مجمع عيادات وأسنان خيري", location: "العباسية - مقابل جامع سيد حامد", phones: ["07724146661"], notes: "أسنان: 07730336778", category: "مستشفيات ومجمعات" }
+            { id: 1, name: "د. إيناس عبد الله شعبان", specialty: "باطنية وصدرية وقلبية", location: "العباسية - شارع جامع سيد حامد قرب مدرسة الزهاوي", phones: ["07709407359"], notes: "الخميس عطلة العيادة", category: "باطنية" },
+            { id: 2, name: "د. زينب عبد الرضا العواد", specialty: "باطنية وصدرية وقلبية", location: "بريهة - قرب مستشفى النور الأهلي - مجمع المصطفى الطبي", phones: ["07715554803"], notes: "الأحد والاثنين والثلاثاء والأربعاء عصراً", category: "باطنية" },
+            { id: 3, name: "د. محمد شاهي", specialty: "باطنية وصدرية وقلبية", location: "العباسية - خلف نادي الأطباء - قرب مجمع ميديكا الطبي", phones: ["07722404015"], notes: "يداوم صباحاً ومساءً - عطلة العيادة الخميس", category: "باطنية" },
+            { id: 4, name: "د. فالح عبد الصاحب الصافي", specialty: "باطنية وصدرية وقلبية", location: "بريهة - قرب حسينية أولاد عامر - مجمع النخبة الطبي", phones: ["07714423733"], notes: "يداوم في مستشفى الصدر التعليمي", category: "باطنية" },
+            { id: 5, name: "د. علي رحيم هاشم", specialty: "باطنية وصدرية وقلبية", location: "العشار - مجمع الفرقدين - شارع الوطن", phones: ["07702710980"], notes: "يداوم في مستشفى الصدر التعليمي", category: "باطنية" },
+            { id: 6, name: "د. قيس الجزائري", specialty: "باطنية وصدرية وقلبية", location: "العباسية - شارع جامع سيد حامد السويج - مجمع القاروني الطبي", phones: ["07800009567", "07706888343"], notes: "يداوم في مستشفى الصدر التعليمي", category: "باطنية" },
+            { id: 7, name: "د. حيدر عبد عون علاوي", specialty: "باطنية وغدد صماء وسكري", location: "الزبير - الرشيدية - مجمع الأنوار الطبي", phones: ["07758580147"], notes: "يداوم في مركز الفيحاء للسكري", category: "باطنية" },
+            { id: 8, name: "د. عبد الكريم زين الدين الموسوي", specialty: "نسائية وتوليد وعقم", location: "الجزائر - عيادات مستشفى الموسوي الأهلي", phones: ["07714587811", "07733345595", "07841277478"], notes: "الجمعة عطلة العيادة", category: "نسائية" },
+            { id: 9, name: "د. لمياء جعفر البغدادي", specialty: "نسائية وتوليد", location: "شارع السعدي - عيادات السعدي التخصصية", phones: ["07729544395"], notes: "السبت عصراً في مستشفى الفراهيدي", category: "نسائية" },
+            { id: 10, name: "د. علي عايد العالي", specialty: "جراحة الجهاز الهضمي والناظور", location: "بريهة - قرب جسر المحاكم - المجمع العالمي", phones: ["07700496658"], notes: "يداوم يوم الأحد في مستشفى الموانئ", category: "جراحة" },
+            { id: 11, name: "د. كاظم الربيعي", specialty: "جلدية وتناسلية وتجميل", location: "شارع السعدي - عيادات السعدي التخصصية", phones: ["07715950905"], notes: "الدوام صباحاً ومساءً", category: "جلدية" },
+            { id: 12, name: "د. ميثم العاشور", specialty: "جراحة الجملة العصبية", location: "شارع السعدي - عيادات السعدي التخصصية", phones: ["07714969600"], notes: "يداوم في مستشفى الصدر التعليمي", category: "جراحة" },
+            { id: 13, name: "مستشفى المواساة الأهلي", specialty: "مستشفى أهلي متكامل وطوارئ", location: "المشراق الجديد", phones: ["07712490649", "07888000612"], notes: "طوارئ واستشاريات على مدار الساعة", category: "مستشفيات" },
+            { id: 14, name: "مجمع سبع سنابل الطبي الخيري (فرع العباسية)", specialty: "مجمع عيادات وأسنان خيري", location: "العباسية - شارع جامع سيد حامد", phones: ["07724146661"], notes: "عيادة الأسنان: 07730336778", category: "مستشفيات" },
+            { id: 15, name: "مختبرات البيان", specialty: "مختبر تحليلات مرضية متقدم", location: "بريهة - قرب الحسينية العامرية", phones: ["07731391222"], notes: "دوام صباحي ومسائي", category: "مختبرات" },
+            { id: 16, name: "صيدلية السعدي", specialty: "صيدلية ومستلزمات طبية", location: "بريهة - مجاور مستشفى السعدي", phones: ["07721088880"], notes: "خدمة متواصلة", category: "صيدليات" }
         ];
 
         let medicalDirectory = JSON.parse(localStorage.getItem('basra_med_data')) || DEFAULT_DATA;
         let lastUpdateDate = localStorage.getItem('basra_med_date') || "1 / 1 / 2025";
         let currentCategory = 'all';
 
-        // Initialize App
+        // Init Lifecycle
         window.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             document.getElementById('lastUpdateBadge').innerText = lastUpdateDate;
@@ -299,10 +303,9 @@
             checkFirstVisit();
         });
 
-        // Show install instructions on first launch
         function checkFirstVisit() {
             if (!localStorage.getItem('basra_med_visited')) {
-                setTimeout(() => toggleModal('installModal'), 1000);
+                setTimeout(() => toggleModal('installModal'), 800);
                 localStorage.setItem('basra_med_visited', 'true');
             }
         }
@@ -328,7 +331,7 @@
                         <a href="tel:${p}" class="flex-1 px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-700 text-xs font-semibold flex items-center justify-center gap-1 transition">
                             <i data-lucide="phone" class="w-3.5 h-3.5 text-teal-600"></i> ${p}
                         </a>
-                        <a href="https://wa.me/964${p.replace(/^0/, '')}" target="_blank" class="p-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 transition" title="واتساب العيادة">
+                        <a href="https://wa.me/964${p.replace(/^0/, '')}" target="_blank" class="p-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 transition" title="واتساب">
                             <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
                         </a>
                     </div>
@@ -347,7 +350,7 @@
                             <span>${item.location || 'البصرة'}</span>
                         </p>
                         ${item.notes ? `
-                        <p class="text-[11px] text-amber-700 bg-amber-50/80 p-2 rounded-xl border border-amber-100/60 leading-relaxed">
+                        <p class="text-[11px] text-amber-800 bg-amber-50/80 p-2 rounded-xl border border-amber-100/60 leading-relaxed">
                             <i data-lucide="info" class="w-3 h-3 inline ml-1"></i> ${item.notes}
                         </p>` : ''}
                     </div>
@@ -360,7 +363,7 @@
             lucide.createIcons();
         }
 
-        // Filtering logic
+        // Filtering Logic
         function filterData() {
             const query = document.getElementById('searchInput').value.trim().toLowerCase();
             const clearBtn = document.getElementById('clearBtn');
@@ -405,22 +408,21 @@
             m.classList.toggle('flex');
         }
 
-        // Admin Security & Management
         function openAdminPanel() {
             toggleModal('adminModal');
         }
 
         function verifyAdmin() {
             const pwd = document.getElementById('adminPassword').value;
-            if (pwd === "1234") { // يمكنك تغيير كلمة المرور هنا
+            if (pwd === "1234") { // يمكنك تعديل كلمة المرور هنا
                 document.getElementById('adminLockState').classList.add('hidden');
                 document.getElementById('adminDashboard').classList.remove('hidden');
             } else {
-                alert("كلمة المرور غير صحيحة!");
+                alert("رمز المرور غير صحيح!");
             }
         }
 
-        // Integrated Data Extractor Engine (Excel & PDF)
+        // Full Multipage File Processing Engine (Excel / CSV / PDF)
         async function processUploadedFile() {
             const fileInput = document.getElementById('dataFileUpload');
             const file = fileInput.files[0];
@@ -434,36 +436,135 @@
             const fileName = file.name.toLowerCase();
 
             try {
-                if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls')) {
+                // 1. Process Excel / CSV Files
+                if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls') || fileName.endsWith('.csv')) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         const data = new Uint8Array(e.target.result);
                         const workbook = XLSX.read(data, { type: 'array' });
-                        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                        const rows = XLSX.utils.sheet_to_json(firstSheet);
-                        
-                        // Map rows to App schema
-                        const extracted = rows.map((r, idx) => ({
-                            id: idx + 1,
-                            name: r['اسم الطبيب'] || r['الاسم'] || r['name'] || 'طبيب',
-                            specialty: r['الاختصاص'] || r['التخصص'] || r['specialty'] || 'عام',
-                            location: r['العنوان'] || r['location'] || '',
-                            phones: String(r['رقم العيادة'] || r['الهاتف'] || '').split(/[\s,-]+/).filter(Boolean),
-                            notes: r['الملاحظات'] || r['notes'] || '',
-                            category: r['القسم'] || 'عام'
-                        }));
+                        let allExtracted = [];
 
-                        applyNewData(extracted, newDate);
+                        workbook.SheetNames.forEach(sheetName => {
+                            const sheet = workbook.Sheets[sheetName];
+                            const rows = XLSX.utils.sheet_to_json(sheet);
+                            
+                            rows.forEach((r) => {
+                                const name = r['اسم الطبيب'] || r['الاسم'] || r['اسم المركز'] || r['اسم الصيدلية'] || r['اسم المختبر'] || r['name'];
+                                if (name && String(name).trim() !== '') {
+                                    allExtracted.push({
+                                        id: allExtracted.length + 1,
+                                        name: String(name).trim(),
+                                        specialty: String(r['الاختصاص'] || r['التخصص'] || sheetName || 'عام').trim(),
+                                        location: String(r['العنوان'] || r['الموقع'] || '').trim(),
+                                        phones: extractPhoneNumbers(String(r['رقم العيادة'] || r['الهاتف'] || r['الموبايل'] || '')),
+                                        notes: String(r['الملاحظات'] || '').trim(),
+                                        category: detectCategory(sheetName, r['الاختصاص'] || '')
+                                    });
+                                }
+                            });
+                        });
+
+                        if (allExtracted.length > 0) {
+                            applyNewData(allExtracted, newDate);
+                        } else {
+                            alert("لم يتم العثور على سجلات في ملف الإكسل.");
+                        }
                     };
                     reader.readAsArrayBuffer(file);
-                } else if (fileName.endsWith('.pdf')) {
-                    alert("تم التعرف على ملف PDF. سيتم قراءة الجداول وتحديث السجلات...");
-                    // For demo extraction logic from browser PDF
-                    applyNewData(medicalDirectory, newDate);
+                } 
+                // 2. Process Multi-page PDF Files
+                else if (fileName.endsWith('.pdf')) {
+                    alert("جارٍ قراءة جميع صفحات الـ PDF واستخراج السجلات... انتظر لحظات.");
+                    
+                    const reader = new FileReader();
+                    reader.onload = async function() {
+                        const typedarray = new Uint8Array(this.result);
+                        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                        
+                        const pdf = await pdfjsLib.getDocument(typedarray).promise;
+                        let extractedList = [];
+                        let currentSection = "عام";
+
+                        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                            const page = await pdf.getPage(pageNum);
+                            const textContent = await page.getTextContent();
+                            const items = textContent.items.map(i => i.str.trim()).filter(Boolean);
+                            const fullPageText = items.join(' ');
+
+                            // Auto-detect section header
+                            if (fullPageText.includes("الباطنية")) currentSection = "باطنية";
+                            else if (fullPageText.includes("النسائية")) currentSection = "نسائية";
+                            else if (fullPageText.includes("الأطفال")) currentSection = "أطفال";
+                            else if (fullPageText.includes("جراحة")) currentSection = "جراحة";
+                            else if (fullPageText.includes("الجلدية")) currentSection = "جلدية";
+                            else if (fullPageText.includes("المفاصل") || fullPageText.includes("الكسور")) currentSection = "كسور";
+                            else if (fullPageText.includes("الأسنان")) currentSection = "أسنان";
+                            else if (fullPageText.includes("العيون")) currentSection = "عيون";
+                            else if (fullPageText.includes("الصيدليات")) currentSection = "صيدليات";
+                            else if (fullPageText.includes("المختبرات")) currentSection = "مختبرات";
+                            else if (fullPageText.includes("المستشفيات")) currentSection = "مستشفيات";
+
+                            for (let i = 0; i < items.length; i++) {
+                                const line = items[i];
+                                if (line.startsWith("د ") || line.startsWith("د.") || line.startsWith("دكتورة") || line.startsWith("مركز") || line.startsWith("مجمع") || line.startsWith("صيدلية") || line.startsWith("مختبر") || line.startsWith("عيادة")) {
+                                    let phoneMatches = [];
+                                    let locationText = "";
+                                    let noteText = "";
+
+                                    for (let j = Math.max(0, i - 4); j <= Math.min(items.length - 1, i + 6); j++) {
+                                        const subLine = items[j];
+                                        const phones = extractPhoneNumbers(subLine);
+                                        if (phones.length > 0) phoneMatches.push(...phones);
+                                        if (subLine.includes("شارع") || subLine.includes("قرب") || subLine.includes("مجمع") || subLine.includes("بريهة") || subLine.includes("العباسية") || subLine.includes("الجزائر") || subLine.includes("الزبير") || subLine.includes("القبلة") || subLine.includes("العشار")) {
+                                            if (subLine !== line) locationText = subLine;
+                                        }
+                                    }
+
+                                    extractedList.push({
+                                        id: extractedList.length + 1,
+                                        name: line,
+                                        specialty: currentSection,
+                                        location: locationText || "البصرة",
+                                        phones: [...new Set(phoneMatches)],
+                                        notes: noteText,
+                                        category: currentSection
+                                    });
+                                }
+                            }
+                        }
+
+                        if (extractedList.length > 0) {
+                            applyNewData(extractedList, newDate);
+                        } else {
+                            alert("تعذر استخراج بيانات منتظمة من PDF. يفضل رفع الملف بصيغة Excel لضمان الدقة بنسبة 100%.");
+                        }
+                    };
+                    reader.readAsArrayBuffer(file);
                 }
             } catch (err) {
                 alert("حدث خطأ أثناء معالجة الملف: " + err.message);
             }
+        }
+
+        function extractPhoneNumbers(str) {
+            const matches = str.match(/(07[3-9][0-9]{8}|7[3-9][0-9]{8})/g);
+            return matches ? matches.map(p => p.startsWith('0') ? p : '0' + p) : [];
+        }
+
+        function detectCategory(sheetName, specialty) {
+            const text = (sheetName + " " + specialty).toLowerCase();
+            if (text.includes("باطن") || text.includes("قلب")) return "باطنية";
+            if (text.includes("نسا") || text.includes("توليد") || text.includes("عقم")) return "نسائية";
+            if (text.includes("طفل") || text.includes("اطفال")) return "أطفال";
+            if (text.includes("جراح")) return "جراحة";
+            if (text.includes("جلد") || text.includes("تجميل")) return "جلدية";
+            if (text.includes("كسر") || text.includes("مفاصل") || text.includes("عظام")) return "كسور";
+            if (text.includes("سنان") || text.includes("تقويم")) return "أسنان";
+            if (text.includes("عين") || text.includes("عيون")) return "عيون";
+            if (text.includes("صيدل")) return "صيدليات";
+            if (text.includes("مختبر") || text.includes("تحليل")) return "مختبرات";
+            if (text.includes("مستشف") || text.includes("مجمع") || text.includes("سنابل")) return "مستشفيات";
+            return "عام";
         }
 
         function applyNewData(newData, date) {
@@ -487,7 +588,7 @@
             downloadAnchor.remove();
         }
 
-        // Feedback & Inbox System
+        // Feedback System
         function submitFeedback(e) {
             e.preventDefault();
             const note = {
@@ -502,7 +603,7 @@
             feedbacks.unshift(note);
             localStorage.setItem('basra_med_feedbacks', JSON.stringify(feedbacks));
 
-            alert("تم إرسال ملاحظتك بنجاح للإدارة! شكراً لمساهمتك.");
+            alert("تم إرسال ملاحظتك بنجاح للإدارة! شكراً لك.");
             document.getElementById('feedbackForm').reset();
             toggleModal('feedbackModal');
             renderFeedbackInbox();
