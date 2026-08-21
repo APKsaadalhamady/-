@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- SheetJS for Clean Excel Imports -->
+    <!-- SheetJS for Excel Extraction -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -56,7 +56,7 @@
         <!-- Update Badge Bar -->
         <div class="bg-teal-50 border-t border-b border-teal-100/60 px-4 py-1.5 text-center text-xs text-teal-800 flex items-center justify-center gap-2 font-medium">
             <i data-lucide="calendar-check" class="w-3.5 h-3.5 text-teal-600"></i>
-            <span>البيانات محدثة لغاية: <strong id="lastUpdateBadge" class="font-bold">1 / 1 / 2025</strong></span>[span_0](start_span)[span_0](end_span)
+            <span>البيانات محدثة لغاية: <strong id="lastUpdateBadge" class="font-bold">1 / 1 / 2025</strong></span>
         </div>
     </header>
 
@@ -180,7 +180,7 @@
                     <button type="submit" class="flex-1 py-2.5 bg-teal-600 text-white rounded-xl text-xs font-semibold hover:bg-teal-700 transition flex items-center justify-center gap-1.5">
                         <i data-lucide="send" class="w-4 h-4"></i> إرسال الملاحظة
                     </button>
-                    <a href="https://wa.me/9647806244532" target="_blank" class="px-4 py-2.5 bg-emerald-500 text-white rounded-xl text-xs font-semibold hover:bg-emerald-600 transition flex items-center gap-1.5" title="مراسلة الإدارة واتساب">[span_1](start_span)[span_1](end_span)
+                    <a href="https://wa.me/9647806244532" target="_blank" class="px-4 py-2.5 bg-emerald-500 text-white rounded-xl text-xs font-semibold hover:bg-emerald-600 transition flex items-center gap-1.5" title="مراسلة الإدارة واتساب">[span_0](start_span)[span_0](end_span)
                         <i data-lucide="phone" class="w-4 h-4"></i> واتساب الإدارة
                     </a>
                 </div>
@@ -226,7 +226,7 @@
                     <h4 class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
                         <i data-lucide="file-up" class="w-4 h-4 text-teal-600"></i> استيراد وتحديث السجلات من ملف (JSON أو Excel):
                     </h4>
-                    <p class="text-xs text-slate-600">يمكنك رفع ملف `data.json` المنظف أو ملف `Excel` لتحديث كافة سجلات الأطباء والمواعيد فوراً.</p>
+                    <p class="text-xs text-slate-600">يمكنك رفع ملف data.json أو ملف Excel لتحديث كافة سجلات الأطباء والمواعيد فوراً.</p>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                         <div>
@@ -244,7 +244,7 @@
                             <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> تطبيق التحديث الآن
                         </button>
                         <button onclick="exportCurrentJSON()" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-xl text-xs font-semibold hover:bg-slate-300 transition flex items-center gap-1.5">
-                            <i data-lucide="download" class="w-3.5 h-3.5"></i> تصدير نسخة data.json الحالية
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i> تصدير نسخة data.json
                         </button>
                     </div>
                 </div>
@@ -267,20 +267,40 @@
 
     <!-- Application Core Script -->
     <script>
-        let medicalDirectory = [];
-        let lastUpdateDate = localStorage.getItem('basra_med_date') || "1 / 1 / 2025";[span_2](start_span)[span_2](end_span)
+        const DEFAULT_DATA = [
+            { id: 1, name: "د. إيناس عبد الله شعبان", specialty: "باطنية وصدرية وقلبية", location: "العباسية - شارع جامع سيد حامد قرب مدرسة الزهاوي", phones: ["07709407359"], notes: "الخميس عطلة العيادة", category: "باطنية" },
+            { id: 2, name: "د. زينب عبد الرضا العواد", specialty: "باطنية وصدرية وقلبية", location: "بريهة - قرب مستشفى النور الأهلي - مجمع المصطفى الطبي", phones: ["07715554803"], notes: "الأحد والاثنين والثلاثاء والأربعاء عصراً", category: "باطنية" },
+            { id: 3, name: "د. محمد شاهي", specialty: "باطنية وصدرية وقلبية", location: "العباسية - خلف نادي الأطباء - قرب مجمع ميديكا الطبي", phones: ["07722404015"], notes: "يداوم صباحاً ومساءً - عطلة العيادة الخميس", category: "باطنية" },
+            { id: 4, name: "د. فالح عبد الصاحب الصافي", specialty: "باطنية وصدرية وقلبية", location: "بريهة - قرب حسينية أولاد عامر - مجمع النخبة الطبي", phones: ["07714423733"], notes: "يداوم في مستشفى الصدر التعليمي", category: "باطنية" },
+            { id: 5, name: "د. علي رحيم هاشم", specialty: "باطنية وصدرية وقلبية", location: "العشار - مجمع الفرقدين - شارع الوطن", phones: ["07702710980"], notes: "يداوم في مستشفى الصدر التعليمي", category: "باطنية" },
+            { id: 6, name: "د. قيس الجزائري", specialty: "باطنية وصدرية وقلبية", location: "العباسية - شارع جامع سيد حامد السويج - مجمع القاروني الطبي", phones: ["07800009567", "07706888343"], notes: "يداوم في مستشفى الصدر التعليمي", category: "باطنية" },
+            { id: 7, name: "د. حيدر عبد عون علاوي", specialty: "باطنية وغدد صماء وسكري", location: "الزبير - الرشيدية - مجمع الأنوار الطبي", phones: ["07758580147"], notes: "يداوم في مركز الفيحاء للسكري", category: "باطنية" },
+            { id: 8, name: "د. عبد الكريم زين الدين الموسوي", specialty: "نسائية وتوليد وعقم", location: "الجزائر - عيادات مستشفى الموسوي الأهلي", phones: ["07714587811", "07733345595", "07841277478"], notes: "الجمعة عطلة العيادة", category: "نسائية" },
+            { id: 9, name: "د. لمياء جعفر البغدادي", specialty: "نسائية وتوليد", location: "شارع السعدي - عيادات السعدي التخصصية", phones: ["07729544395"], notes: "السبت عصراً في مستشفى الفراهيدي", category: "نسائية" },
+            { id: 10, name: "د. علي عايد العالي", specialty: "جراحة الجهاز الهضمي والناظور", location: "بريهة - قرب جسر المحاكم - المجمع العالمي", phones: ["07700496658"], notes: "يداوم يوم الأحد في مستشفى الموانئ", category: "جراحة" },
+            { id: 11, name: "د. كاظم الربيعي", specialty: "جلدية وتناسلية وتجميل", location: "شارع السعدي - عيادات السعدي التخصصية", phones: ["07715950905"], notes: "الدوام صباحاً ومساءً", category: "جلدية" },
+            { id: 12, name: "د. ميثم العاشور", specialty: "جراحة الجملة العصبية", location: "شارع السعدي - عيادات السعدي التخصصية", phones: ["07714969600"], notes: "يداوم في مستشفى الصدر التعليمي", category: "جراحة" },
+            { id: 13, name: "مستشفى المواساة الأهلي", specialty: "مستشفى أهلي متكامل وطوارئ", location: "المشراق الجديد", phones: ["07712490649", "07888000612"], notes: "طوارئ واستشاريات على مدار الساعة", category: "مستشفيات" },
+            { id: 14, name: "مجمع سبع سنابل الطبي الخيري (فرع العباسية)", specialty: "مجمع عيادات وأسنان خيري", location: "العباسية - شارع جامع سيد حامد", phones: ["07724146661"], notes: "عيادة الأسنان: 07730336778", category: "مستشفيات" },
+            { id: 15, name: "مختبرات البيان", specialty: "مختبر تحليلات مرضية متقدم", location: "بريهة - قرب الحسينية العامرية", phones: ["07731391222"], notes: "دوام صباحي ومسائي", category: "مختبرات" },
+            { id: 16, name: "صيدلية السعدي", specialty: "صيدلية ومستلزمات طبية", location: "بريهة - مجاور مستشفى السعدي", phones: ["07721088880"], notes: "خدمة متواصلة", category: "صيدليات" }
+        ];
+
+        let medicalDirectory = DEFAULT_DATA;
+        let lastUpdateDate = localStorage.getItem('basra_med_date') || "1 / 1 / 2025";[span_1](start_span)[span_1](end_span)
         let currentCategory = 'all';
 
-        // Load data on start: first try localStorage, then external data.json
         window.addEventListener('DOMContentLoaded', async () => {
-            lucide.createIcons();
             document.getElementById('lastUpdateBadge').innerText = lastUpdateDate;
             document.getElementById('newUpdateDate').value = lastUpdateDate;
 
             const localSaved = localStorage.getItem('basra_med_data');
             if (localSaved) {
-                medicalDirectory = JSON.parse(localSaved);
-                renderCards(medicalDirectory);
+                try {
+                    medicalDirectory = JSON.parse(localSaved);
+                } catch(e) {
+                    medicalDirectory = DEFAULT_DATA;
+                }
             } else {
                 try {
                     const res = await fetch('./data.json');
@@ -289,13 +309,14 @@
                         localStorage.setItem('basra_med_data', JSON.stringify(medicalDirectory));
                     }
                 } catch (e) {
-                    console.log("data.json not loaded yet, using memory cache.");
+                    medicalDirectory = DEFAULT_DATA;
                 }
-                renderCards(medicalDirectory);
             }
 
+            renderCards(medicalDirectory);
             renderFeedbackInbox();
             checkFirstVisit();
+            lucide.createIcons();
         });
 
         function checkFirstVisit() {
@@ -305,7 +326,6 @@
             }
         }
 
-        // Render Cards with clear layout for Name, Location, Hours/Notes, and Phones
         function renderCards(data) {
             const grid = document.getElementById('resultsGrid');
             const empty = document.getElementById('emptyState');
@@ -362,7 +382,6 @@
             lucide.createIcons();
         }
 
-        // Filtering
         function filterData() {
             const query = document.getElementById('searchInput').value.trim().toLowerCase();
             const clearBtn = document.getElementById('clearBtn');
@@ -405,6 +424,7 @@
             const m = document.getElementById(id);
             m.classList.toggle('hidden');
             m.classList.toggle('flex');
+            lucide.createIcons();
         }
 
         function openAdminPanel() {
@@ -416,12 +436,12 @@
             if (pwd === "1234") {
                 document.getElementById('adminLockState').classList.add('hidden');
                 document.getElementById('adminDashboard').classList.remove('hidden');
+                lucide.createIcons();
             } else {
                 alert("رمز المرور غير صحيح!");
             }
         }
 
-        // File Import Handler (JSON & Excel)
         async function processUploadedFile() {
             const fileInput = document.getElementById('dataFileUpload');
             const file = fileInput.files[0];
@@ -514,7 +534,7 @@
             localStorage.setItem('basra_med_date', lastUpdateDate);
             document.getElementById('lastUpdateBadge').innerText = lastUpdateDate;
             renderCards(medicalDirectory);
-            alert(`تم استيراد ${newData.length} سجل بنجاح!`);
+            alert("تم استيراد " + newData.length + " سجل بنجاح!");
             toggleModal('adminModal');
         }
 
@@ -528,7 +548,6 @@
             downloadAnchor.remove();
         }
 
-        // Feedback
         function submitFeedback(e) {
             e.preventDefault();
             const note = {
