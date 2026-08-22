@@ -3,14 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>دليل البصرة الطبي الشامل</title>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <title>طبيبك - دليل البصرة الطبي الشامل</title>
+  
+  <!-- خطوط عربية مميزة -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- مكتبات فايربيز -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
   <style>
     :root {
       --primary: #0284c7;
       --primary-dark: #0369a1;
-      --accent: #0ea5e9;
       --bg: #f8fafc;
       --card-bg: #ffffff;
       --text: #0f172a;
@@ -20,20 +28,8 @@
       --radius: 16px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Tajawal', sans-serif;
-    }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; }
+    body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
     header {
       background: linear-gradient(135deg, #0f172a, #0369a1);
@@ -43,15 +39,20 @@
       box-shadow: var(--shadow);
     }
 
-    header h1 {
-      font-size: 2.2rem;
-      font-weight: 800;
-      margin-bottom: 0.5rem;
+    .app-title {
+      font-family: 'Reem Kufi', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.3rem;
+      color: #38bdf8;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
 
     header p {
-      color: #94a3b8;
-      font-size: 1.1rem;
+      color: #cbd5e1;
+      font-size: 1.05rem;
+      font-weight: 500;
     }
 
     .container {
@@ -64,7 +65,7 @@
 
     .search-filter-box {
       background: var(--card-bg);
-      padding: 1.5rem;
+      padding: 1.25rem;
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       display: flex;
@@ -73,16 +74,9 @@
       margin-bottom: 1.5rem;
     }
 
-    .search-row {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
-
     .search-input-wrap {
-      flex: 1;
       position: relative;
-      min-width: 260px;
+      width: 100%;
     }
 
     .search-input-wrap i {
@@ -129,15 +123,8 @@
       transition: all 0.2s ease;
     }
 
-    .pill:hover {
-      background: #e2e8f0;
-    }
-
-    .pill.active {
-      background: var(--primary);
-      color: white;
-      border-color: var(--primary);
-    }
+    .pill:hover { background: #e2e8f0; }
+    .pill.active { background: var(--primary); color: white; border-color: var(--primary); }
 
     .results-info {
       display: flex;
@@ -167,14 +154,7 @@
       transition: transform 0.2s, box-shadow 0.2s;
     }
 
-    .card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow);
-    }
-
-    .card-header {
-      margin-bottom: 0.75rem;
-    }
+    .card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
 
     .badge {
       display: inline-block;
@@ -188,7 +168,7 @@
     }
 
     .doctor-name {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 800;
       color: #0f172a;
       line-height: 1.3;
@@ -198,9 +178,9 @@
       display: flex;
       flex-direction: column;
       gap: 0.6rem;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       color: #475569;
-      margin-bottom: 1rem;
+      margin: 0.75rem 0 1rem;
     }
 
     .info-row {
@@ -249,9 +229,85 @@
       transition: all 0.2s;
     }
 
-    .btn-call:hover {
-      background: #16a34a;
+    .btn-call:hover { background: #16a34a; color: white; }
+
+    .btn-report {
+      background: #fffbeb;
+      color: #b45309;
+      border: 1px solid #fde68a;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+      transition: all 0.2s;
+    }
+
+    .btn-report:hover { background: #fef3c7; }
+
+    /* النافذة المنبثقة */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      backdrop-filter: blur(2px);
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 440px;
+      padding: 1.5rem;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+    }
+
+    .modal textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      margin: 0.75rem 0 1rem;
+      resize: none;
+      outline: none;
+      font-size: 0.95rem;
+    }
+
+    .modal textarea:focus { border-color: var(--primary); }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+
+    .btn-submit {
+      background: var(--primary);
       color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-cancel {
+      background: #f1f5f9;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
     }
 
     .pagination {
@@ -259,44 +315,35 @@
       justify-content: center;
       gap: 0.5rem;
       margin: 2rem 0;
+      flex-wrap: wrap;
     }
 
     .page-btn {
       background: white;
       border: 1px solid var(--border);
-      padding: 0.6rem 1rem;
+      padding: 0.5rem 0.9rem;
       border-radius: 10px;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s;
     }
 
-    .page-btn.active {
-      background: var(--primary);
-      color: white;
-      border-color: var(--primary);
-    }
-
-    .page-btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
+    .page-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   </style>
 </head>
 <body>
 
   <header>
-    <h1><i class="fa-solid fa-hospital-user"></i> دليل البصرة الطبي</h1>
-    <p>دليل شامل ومدقق لجميع الأطباء والمجمعات والصيدليات والمستشفيات</p>
+    <div class="app-title"><i class="fa-solid fa-staff-snake"></i> طَبِيبُك</div>
+    <p>دليل البصرة الطبي الشامل (أطباء، مجمعات، مستشفيات، صيدليات، ومختبرات)</p>
   </header>
 
   <div class="container">
     <div class="search-filter-box">
-      <div class="search-row">
-        <div class="search-input-wrap">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" id="searchInput" placeholder="ابحث باسم الطبيب، التخصص، أو المنطقة (العباسية، بريهة، الزبير...)...">
-        </div>
+      <div class="search-input-wrap">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="ابحث باسم الطبيب، التخصص، أو المنطقة (العباسية، بريهة، الزبير، الجنينة...)...">
       </div>
       <div class="category-pills" id="categoryPills">
         <div class="pill active" data-cat="all">الكل</div>
@@ -323,16 +370,45 @@
     </div>
 
     <div class="grid" id="doctorsGrid"></div>
-
     <div class="pagination" id="pagination"></div>
   </div>
 
+  <!-- نافذة اقتراح تعديل -->
+  <div id="reportModal" class="modal">
+    <div class="modal-content">
+      <h3 style="color: var(--primary); margin-bottom: 0.4rem;"><i class="fa-solid fa-pen-to-square"></i> اقتراح تعديل أو تصحيح</h3>
+      <p id="modalDocName" style="font-weight: bold; color: #0f172a;"></p>
+      <textarea id="reportText" rows="4" placeholder="اكتب التعديل المطلوب (تغيير رقم الهاتف، عنوان جديد، أوقات الدوام...)..."></textarea>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeModal()">إلغاء</button>
+        <button class="btn-submit" onclick="submitReport()"><i class="fa-solid fa-paper-plane"></i> إرسال للإدارة</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ربط ملف البيانات المكون من 1811 سجل -->
   <script src="data.js"></script>
+
   <script>
+    // إعدادات فايربيز الخاصة بمشروع طبيبك
+    const firebaseConfig = {
+      apiKey: "AIzaSyCOKDdYgqbGLx3hFUDXKNeguk_cftS-oN4",
+      authDomain: "tabeebak-af88d.firebaseapp.com",
+      projectId: "tabeebak-af88d",
+      storageBucket: "tabeebak-af88d.firebasestorage.app",
+      messagingSenderId: "987165008471",
+      appId: "1:987165008471:web:d7132845ad611b9e093912",
+      measurementId: "G-GC141HRWSZ"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
     let currentCat = 'all';
     let searchQuery = '';
     let currentPage = 1;
     const itemsPerPage = 24;
+    let selectedDoc = null;
 
     const searchInput = document.getElementById('searchInput');
     const categoryPills = document.getElementById('categoryPills');
@@ -341,14 +417,14 @@
     const pagination = document.getElementById('pagination');
 
     function filterData() {
-      if (!window.doctorsData) return [];
+      if (typeof doctorsData === 'undefined') return [];
       return doctorsData.filter(doc => {
         const matchCat = currentCat === 'all' || doc.category === currentCat;
         const q = searchQuery.toLowerCase().trim();
         const matchSearch = !q || 
           doc.name.toLowerCase().includes(q) || 
           doc.specialty.toLowerCase().includes(q) || 
-          doc.location.toLowerCase().includes(q) ||
+          (doc.location && doc.location.toLowerCase().includes(q)) ||
           (doc.notes && doc.notes.toLowerCase().includes(q));
         return matchCat && matchSearch;
       });
@@ -402,6 +478,9 @@
             </div>
             <div class="card-footer">
               ${phoneBtns}
+              <button class="btn-report" onclick="openModal('${doc.id}', '${doc.name}')">
+                <i class="fa-solid fa-pen-to-square"></i> تصحيح
+              </button>
             </div>
           </div>
         `;
@@ -417,7 +496,6 @@
       }
 
       let html = `<button class="page-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>السابق</button>`;
-      
       let startPage = Math.max(1, currentPage - 2);
       let endPage = Math.min(totalPages, currentPage + 2);
 
@@ -435,7 +513,40 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Events
+    function openModal(id, name) {
+      selectedDoc = { id, name };
+      document.getElementById('modalDocName').textContent = "الجهة: " + name;
+      document.getElementById('reportText').value = "";
+      document.getElementById('reportModal').style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById('reportModal').style.display = "none";
+    }
+
+    async function submitReport() {
+      const text = document.getElementById('reportText').value.trim();
+      if (!text) {
+        alert("يرجى كتابة تفاصيل التعديل أو الملاحظة.");
+        return;
+      }
+
+      try {
+        await db.collection("edit_requests").add({
+          doctorId: selectedDoc.id,
+          doctorName: selectedDoc.name,
+          suggestion: text,
+          status: "pending",
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        alert("تم إرسال اقتراح التعديل إلى إدارة التطبيق بنجاح. شكراً لتعاونكم!");
+        closeModal();
+      } catch (e) {
+        console.error("Error:", e);
+        alert("حدث خطأ أثناء الإرسال، يرجى التأكد من اتصال الإنترنت.");
+      }
+    }
+
     searchInput.addEventListener('input', (e) => {
       searchQuery = e.target.value;
       currentPage = 1;
@@ -452,7 +563,6 @@
       renderCards();
     });
 
-    // Init
     document.addEventListener('DOMContentLoaded', renderCards);
   </script>
 </body>
